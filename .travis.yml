@@ -39,7 +39,7 @@ android:
  - google-gdk-license-.+
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_03cb900b81da_key -iv $encrypted_03cb900b81da_iv -in NewsKeystore.jks.enc -out NewsKeystore.jks -d
+- openssl aes-256-cbc -K $encrypted_aefbedd8d067_key -iv $encrypted_aefbedd8d067_iv -in NewsKeystore.jks.enc -out NewsKeystore.jks -d
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
