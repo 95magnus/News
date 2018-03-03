@@ -16,14 +16,14 @@ android {
             config {
                 keyAlias System.getenv("KEY_ALIAS")
                 keyPassword System.getenv("KEY_PASSWORD")
-                storeFile file(System.getenv("STORE_FILE"))
+                storeFile rootProject.file(System.getenv("STORE_FILE"))
                 storePassword System.getenv("STORE_PASSWORD")
             }
         } else {
             config {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-                storeFile file(keystoreProperties['storeFile'])
+                storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
             }
         }
