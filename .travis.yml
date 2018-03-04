@@ -60,7 +60,7 @@ before_script:
 - chmod +x gradlew
 
 script:
-- "./gradlew clean test build --stacktrace --debug"
+- "./gradlew clean test build --stacktrace --info"
 #- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
 
