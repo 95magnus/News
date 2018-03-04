@@ -10,12 +10,13 @@ cache:
  directories:
  - $HOME/.gradle/caches/
  - $HOME/.gradle/wrapper/
-
+ - $HOME/.android/build-cache
+  
 env:
  global:
  - ANDROID_API=26
+ - ANDROID_BUILD_TOOLS=26.0.2
  - EMULATOR_API=24
- - ANDROID_BUILD_TOOLS=26.0.1
  - ABI=armeabi-v7a
  - TAG=google_apis
  - ADB_INSTALL_TIMEOUT=10 # minutes
@@ -23,94 +24,62 @@ env:
 android:
  components:
  - tools
- - platform-tools
- - build-tools-$ANDROID_BUILD_TOOLS
- - android-$ANDROID_API
- - android-$EMULATOR_API
  - tools
- - extra-google-m2repository
- - extra-android-m2repository # for design library
- - addon-google_apis-google-24 # google play services
- - sys-img-armeabi-v7a-android-$EMULATOR_API
+ - platform-tools
+ - android-$ANDROID_API
+# - android-$EMULATOR_API
+ - build-tools-$ANDROID_BUILD_TOOLS
+ - exstra
+# - extra-google-m2repository
+# - extra-android-m2repository # for design library
+# - sys-img-armeabi-v7a-android-$EMULATOR_API
 
  #licenses:
  #- android-sdk-preview-license-.+
  #- android-sdk-license-.+
  #- google-gdk-license-.+
 
-before_install:
-- openssl aes-256-cbc -K $encrypted_aefbedd8d067_key -iv $encrypted_aefbedd8d067_iv -in NewsKeystore.jks.enc -out NewsKeystore.jks -d
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-- chmod +x gradlew
+#before_install:
+#- mkdir "$ANDROID_HOME/licenses" || true
+#- echo -e "n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+#- echo -e "n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+#- chmod +x gradlew
 #- ./gradlew dependencies || true # DON'T ADD unless you are getting "Install missing components using SDK manager"
 #Source: https://medium.com/@oldergod/constraint-layout-and-circleci-travis-d50342696d2
 
-before_script:
-#- echo 'count=0' > /home/travis/.android/repositories.cfg
-#- sdkmanager --list || true
-#- sdkmanager --uninstall "system-images;android-15;default;armeabi-v7a"
-#- sdkmanager --uninstall "system-images;android-16;default;armeabi-v7a"
-#- sdkmanager --uninstall "system-images;android-17;default;armeabi-v7a"
-#- sdkmanager --uninstall "system-images;android-18;default;armeabi-v7a"
-#- sdkmanager --uninstall "system-images;android-19;default;armeabi-v7a"
-#- sdkmanager --uninstall "system-images;android-21;default;armeabi-v7a"
-#- sdkmanager --uninstall "extras;google;google_play_services"
-#- sdkmanager --uninstall "extras;android;support"
-#- sdkmanager --uninstall "platforms;android-10"
-#- sdkmanager --uninstall "platforms;android-15"
-#- sdkmanager --uninstall "platforms;android-16"
-#- sdkmanager --uninstall "platforms;android-17"
-#- sdkmanager --uninstall "platforms;android-18"
-#- sdkmanager --uninstall "platforms;android-19"
-#- sdkmanager --uninstall "platforms;android-20"
-#- sdkmanager --uninstall "platforms;android-21"
-#- sdkmanager --uninstall "build-tools;21.1.2"
-#- echo yes | sdkmanager "tools"
-#- echo yes | sdkmanager "platforms;android-$ANDROID_API" # Latest platform required by SDK tools
-#- echo yes | sdkmanager "platforms;android-$EMULATOR_API" # Android platform required by emulator
-#- echo yes | sdkmanager "extras;android;m2repository"
-#- echo yes | sdkmanager "extras;google;m2repository"
-#- echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
-#- echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
-#- echo yes | sdkmanager "sys-img-armeabi-v7a-android-$EMULATOR_API"
-#- echo no | avdmanager create avd -n acib -k "system-images;android-$EMULATOR_API;${TAG};${ABI}" -f --abi "$ABI" --tag "$TAG"
-#- emulator -avd acib -engine classic -no-window -camera-back none -camera-front none -verbose -qemu -m 512 &
-#- adb wait-for-device get-serialno
-#- sdkmanager --list || true
+#before_script:
+#- echo yes | sdkmanager "platforms;android-$ANDROID_API"
+#- echo y | android update sdk -a --no-ui --filter android-$EMULATOR_API
+#- echo y | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+#- echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+#- emulator -avd test -no-skin -no-window &
 #- android-wait-for-emulator
 #- adb shell input keyevent 82 &
-#---------------
-
-- echo yes | sdkmanager "platforms;android-$ANDROID_API"
-- echo y | android update sdk -a --no-ui --filter android-$EMULATOR_API
-- echo y | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
-- echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
-- emulator -avd test -no-skin -no-window &
-- android-wait-for-emulator
-- adb shell input keyevent 82 &
 
 script:
-- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+- "./gradlew clean test build"
+#- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+
 
 before_deploy:
-- cp $TRAVIS_BUILD_DIR/$STORE_FILE $HOME
-- cd app/build/outputs/apk/
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
+- openssl aes-256-cbc -K $encrypted_aefbedd8d067_key -iv $encrypted_aefbedd8d067_iv -in NewsKeystore.jks.enc -out NewsKeystore.jks -d
+#- cp $TRAVIS_BUILD_DIR/$STORE_FILE $HOME
+#- cd app/build/outputs/apk/
+#- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
+
+- cd app/build/outputs/apk/release
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
 
 # Verification
 - jarsigner -verify app-release-unsigned.apk
 - "${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 app-release-unsigned.apk News.apk"
 
 deploy:
-  provider: releases
-  file: News.apk
-  skip_cleanup: true
-
-  on:
-    repo: 95magnus/News
-    tags: true
-    jdk: oraclejdk8
-  api_key:
-    secure: "a56d5YbbvGUfydjp6FJv2WFuBJ6zDS3mEOdnvqOZRPfBKS7K2yx1fLgwTtav+i2krbg6axb5j8iSsKh/+WrXQA++HMwhQZX92Y3cOlJCX54YH0v/ksdiXhHKKoZHNP97RG8HYLqI/el7pomIwpm4nNtizRpB9mihQ+frF+n4RAfAwl7xOPgOLZBJvmL+vXbkbN+VqszP8fLIVpAZ8vQYfLMAKsPtS1cko3MCmY4gzmXk1PenQFoeGJWQhT5y7zmu7/nejLEvN0WuRfRDp+nDLAv0VrIpGiLhOb0uu4N/BK70uNKFXk9+6oII6r1hH3uWpcw+DA4SRLljjfOAx5k2PJvbqr75Kfpox9eIDVRo80M+K5A+pbmBfh/l9Y7lU4MJQfcVvbdW9vldK6CcmfPdt2ONjvrncaBUGMhiNpI/h4GL2b5TuLkjJKiMa2HsXsfGaKFHtUhp8/VGBfo9I1SVIQ0hq695HkK9ln4GykI95btRK/XI9Npp+06VkvMXo68C4KJcR9tWqCtAuKfxebnGY/pSB7ZAI2jRMGhtRo8HWuEMUwThGwD8Nzg1KnPik/qAr2ZdgaWgbYP7l3fOOeT4aw5fsouecopcqfNeqCahq3d0+ju/qK9gZ99Sj9FBUspGgUON2cIWC5JIwinYOLvwg83VOqS+AsnqayC2kz36p3U="
+ provider: releases
+ on:
+  branch: master
+  tags: true
+ api_key: 
+  secure: "a56d5YbbvGUfydjp6FJv2WFuBJ6zDS3mEOdnvqOZRPfBKS7K2yx1fLgwTtav+i2krbg6axb5j8iSsKh/+WrXQA++HMwhQZX92Y3cOlJCX54YH0v/ksdiXhHKKoZHNP97RG8HYLqI/el7pomIwpm4nNtizRpB9mihQ+frF+n4RAfAwl7xOPgOLZBJvmL+vXbkbN+VqszP8fLIVpAZ8vQYfLMAKsPtS1cko3MCmY4gzmXk1PenQFoeGJWQhT5y7zmu7/nejLEvN0WuRfRDp+nDLAv0VrIpGiLhOb0uu4N/BK70uNKFXk9+6oII6r1hH3uWpcw+DA4SRLljjfOAx5k2PJvbqr75Kfpox9eIDVRo80M+K5A+pbmBfh/l9Y7lU4MJQfcVvbdW9vldK6CcmfPdt2ONjvrncaBUGMhiNpI/h4GL2b5TuLkjJKiMa2HsXsfGaKFHtUhp8/VGBfo9I1SVIQ0hq695HkK9ln4GykI95btRK/XI9Npp+06VkvMXo68C4KJcR9tWqCtAuKfxebnGY/pSB7ZAI2jRMGhtRo8HWuEMUwThGwD8Nzg1KnPik/qAr2ZdgaWgbYP7l3fOOeT4aw5fsouecopcqfNeqCahq3d0+ju/qK9gZ99Sj9FBUspGgUON2cIWC5JIwinYOLvwg83VOqS+AsnqayC2kz36p3U="
+ file: "app/build/outputs/apk/release/News.apk"
+ skip_cleanup: true
