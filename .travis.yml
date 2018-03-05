@@ -54,11 +54,7 @@ before_deploy:
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
 
 - cd app/build/outputs/apk/release/
-<<<<<<< HEAD
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD app-release.apk $KEY_ALIAS
-=======
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD app-release.apk $KEY_ALIAS
->>>>>>> 4e20cc14c5e0e4a63c69476a8f999eeaee29f951
 
 # Verification
 - jarsigner -verify app-release.apk
