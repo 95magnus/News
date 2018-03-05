@@ -44,21 +44,17 @@ script:
 #- "./gradlew clean test build --stacktrace"
 #- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
-after_script:
-- ls $APK_DIR
-- ls app/build/test-results
-#- cat ${TRAVIS_BUILD_DIR}/app/build/test-results/TEST-me.solhaug.news.ExampleUnitTest.xml
-
 before_deploy:
 #- cp $TRAVIS_BUILD_DIR/$STORE_FILE $HOME
 #- cd app/build/outputs/apk/
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
 
 - cd $APK_DIR
+- mv app-release.apk News-${TRAVIS_TAG}.apk
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD app-release.apk $KEY_ALIAS
 
 # Verification
-- apksigner -verify -out News-${TRAVIS_TAG}.apk app-release.apk
+#- apksigner -verify -out News-${TRAVIS_TAG}.apk app-release.apk
 #- "${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 app-release.apk News-${TRAVIS_TAG}.apk"
 
 deploy:
