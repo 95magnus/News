@@ -39,7 +39,8 @@ before_script:
 - chmod +x gradlew
 
 script:
-- "./gradlew clean test build --stacktrace"
+- "./gradlew clean assembleRelease check -PdisablePreDex -x testDebugUnitTest --stacktrace"
+#- "./gradlew clean test build --stacktrace"
 #- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
 after_script:
@@ -53,7 +54,7 @@ before_deploy:
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release-unsigned.apk $KEY_ALIAS
 
 - cd app/build/outputs/apk/release/
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEYPASSWORD app-release.apk $KEY_ALIAS
+#- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD app-release.apk $KEY_ALIAS
 
 # Verification
 - jarsigner -verify app-release.apk
