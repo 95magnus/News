@@ -67,5 +67,5 @@ deploy:
   tags: true
  api_key:
   secure: "a56d5YbbvGUfydjp6FJv2WFuBJ6zDS3mEOdnvqOZRPfBKS7K2yx1fLgwTtav+i2krbg6axb5j8iSsKh/+WrXQA++HMwhQZX92Y3cOlJCX54YH0v/ksdiXhHKKoZHNP97RG8HYLqI/el7pomIwpm4nNtizRpB9mihQ+frF+n4RAfAwl7xOPgOLZBJvmL+vXbkbN+VqszP8fLIVpAZ8vQYfLMAKsPtS1cko3MCmY4gzmXk1PenQFoeGJWQhT5y7zmu7/nejLEvN0WuRfRDp+nDLAv0VrIpGiLhOb0uu4N/BK70uNKFXk9+6oII6r1hH3uWpcw+DA4SRLljjfOAx5k2PJvbqr75Kfpox9eIDVRo80M+K5A+pbmBfh/l9Y7lU4MJQfcVvbdW9vldK6CcmfPdt2ONjvrncaBUGMhiNpI/h4GL2b5TuLkjJKiMa2HsXsfGaKFHtUhp8/VGBfo9I1SVIQ0hq695HkK9ln4GykI95btRK/XI9Npp+06VkvMXo68C4KJcR9tWqCtAuKfxebnGY/pSB7ZAI2jRMGhtRo8HWuEMUwThGwD8Nzg1KnPik/qAr2ZdgaWgbYP7l3fOOeT4aw5fsouecopcqfNeqCahq3d0+ju/qK9gZ99Sj9FBUspGgUON2cIWC5JIwinYOLvwg83VOqS+AsnqayC2kz36p3U="
- file: "$APK_DIR/News-${TRAVIS_TAG}.apk"
+ file: "${TRAVIS_BUILD_DIR}/$APK_DIR/News-${TRAVIS_TAG}.apk"
  skip_cleanup: true
