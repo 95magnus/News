@@ -58,8 +58,8 @@ before_deploy:
 #- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/$STORE_FILE -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD app-release.apk $KEY_ALIAS
 
 # Verification
-- jarsigner -verify app-release.apk
-- "${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 app-release.apk News-${TRAVIS_TAG}.apk"
+- apksigner -verify -out News-${TRAVIS_TAG}.apk app-release.apk
+#- "${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 app-release.apk News-${TRAVIS_TAG}.apk"
 
 deploy:
  provider: releases
